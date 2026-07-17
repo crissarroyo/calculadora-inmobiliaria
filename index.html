@@ -200,7 +200,7 @@
       <div class="kpi hero2"><div class="t">Tu utilidad mínima</div><div class="v" id="kUtil">$0</div><div class="s" id="kUtilS">Garantizada al cerrar en el máximo</div></div>
       <div class="kpi"><div class="t">Comisión por venta</div><div class="v" id="kCom">$0</div><div class="s" id="kComS">5% del valor</div></div>
       <div class="kpi"><div class="t">Total adeudos</div><div class="v" id="kDeudas">$0</div><div class="s" id="kDeudasS">— del valor</div></div>
-      <div class="kpi"><div class="t">Capital que necesitas</div><div class="v" id="kCapital">$0</div><div class="s">Oferta + hipoteca + adeudos + inversión</div></div>
+      <div class="kpi"><div class="t">Capital que necesitas</div><div class="v" id="kCapital">$0</div><div class="s">Oferta + adeudos de servicios + inversión</div></div>
     </div>
 
     <div class="card">
@@ -418,7 +418,7 @@ function drawSim(s){
   $('reLow').textContent=fmt(low); $('reHigh').textContent=fmt(high);
   const oferta = high>low ? low + (high-low)*ofertaPct/100 : high;
   const utilTotal = s.utilMin + (s.montoMax - oferta);
-  const capital = oferta + s.hipoteca + s.inversion;   // lo que desembolsas
+  const capital = oferta + s.inversion;   // lo que desembolsas (la hipoteca se liquida en la venta, no la pagas tú)
   $('sOferta').textContent=fmt(oferta);
   $('sUtil').textContent=fmtS(utilTotal);
   $('sUtil').style.color = utilTotal>=0 ? 'var(--green)' : 'var(--red)';
