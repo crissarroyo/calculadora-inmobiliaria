@@ -40,10 +40,14 @@
   input[type=text].money:focus{outline:none;border-color:var(--brand2);background:#fff}
   input[type=text].lbl-edit{border:none;border-bottom:1px dashed var(--line);font-size:.8rem;font-weight:600;color:var(--muted);background:transparent;width:60%;padding:1px 2px}
   input[type=text].lbl-edit:focus{outline:none;border-bottom-color:var(--brand2);color:var(--ink)}
-  .param-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-  .param-row label{font-size:.8rem;font-weight:600;color:var(--muted);flex:1}
-  .param-row input[type=range]{flex:1.4;accent-color:var(--brand)}
-  .param-val{font-size:.85rem;font-weight:700;min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+  /* Slider con +/- */
+  .param-block{margin-bottom:16px}
+  .param-block label{font-size:.8rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px}
+  .param-val-above{font-size:.9rem;font-weight:800;text-align:center;color:var(--brand);margin-bottom:5px;font-variant-numeric:tabular-nums}
+  .slider-wrap{display:flex;align-items:center;gap:8px}
+  .slider-wrap input[type=range]{flex:1;accent-color:var(--brand);touch-action:pan-y}
+  .btn-step{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--brand);flex-shrink:0;padding:0;line-height:1;transition:.15s;user-select:none}
+  .btn-step:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
   .hint{font-size:.72rem;color:var(--muted);margin-top:3px}
   /* status banner */
   .status{border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;border:1.5px solid;display:flex;gap:14px;align-items:flex-start}
@@ -59,7 +63,7 @@
   /* KPI grid */
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
   .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px}
-  .kpi .t{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+  .kpi .t{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);display:flex;align-items:center;gap:4px;flex-wrap:wrap}
   .kpi .v{font-size:1.35rem;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
   .kpi .s{font-size:.72rem;color:var(--muted);margin-top:2px}
   .kpi.hero{background:linear-gradient(135deg,#26370f,#4e6b2f);border:none;color:#fff}
@@ -67,10 +71,14 @@
   .kpi.hero2{background:linear-gradient(135deg,#065f46,#059669);border:none;color:#fff}
   .kpi.hero2 .t,.kpi.hero2 .s{color:rgba(255,255,255,.78)}
   .neg-val{color:var(--red)!important}
-  /* negotiation simulator */
-  .rangebar{position:relative;height:14px;border-radius:8px;background:linear-gradient(90deg,#34d399,#fbbf24,#f87171);margin:26px 6px 8px}
-  .rangebar .knob{position:absolute;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:4px solid var(--brand);box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:grab}
-  .range-ends{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin:0 6px 10px;font-variant-numeric:tabular-nums}
+  /* Botón de info ⓘ */
+  .info-btn{background:transparent;border:1.5px solid currentColor;opacity:.6;border-radius:50%;width:17px;height:17px;font-size:.62rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;color:inherit;transition:.15s;line-height:1}
+  .info-btn:hover{opacity:1;background:rgba(255,255,255,.25)}
+  .kpi:not(.hero):not(.hero2) .info-btn{color:var(--muted);border-color:var(--muted)}
+  .kpi:not(.hero):not(.hero2) .info-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand);opacity:1}
+  /* Simulador */
+  .range-ends{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin:0 6px 6px;font-variant-numeric:tabular-nums}
+  .sim-val-display{text-align:center;font-size:1rem;font-weight:800;color:var(--brand);margin-bottom:6px;font-variant-numeric:tabular-nums;padding:4px 0}
   .sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
   .sim-cell{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
   .sim-cell .t{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase}
@@ -87,6 +95,7 @@
   th{font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
   tr.total td{font-weight:800;border-top:2px solid var(--ink);border-bottom:none;font-size:.95rem}
   td.pos{color:var(--green);font-weight:600} td.neg{color:var(--red)}
+  td.info-row{color:var(--muted);font-style:italic;font-size:.78rem}
   /* scenarios */
   .scen-row{display:flex;gap:8px;margin-bottom:10px}
   .scen-row input{flex:1;padding:8px 12px;border:1.5px solid var(--line);border-radius:9px;font-size:.85rem}
@@ -99,8 +108,16 @@
   .scen-list li span{flex:1}
   .scen-list button{padding:4px 10px;font-size:.75rem}
   .empty{font-size:.8rem;color:var(--muted);font-style:italic}
+  /* Popup info */
+  .info-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+  .info-overlay.open{display:flex}
+  .info-box{background:#fff;border-radius:18px;padding:26px 24px 20px;max-width:400px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.22)}
+  .info-box h4{font-size:1.05rem;font-weight:800;margin-bottom:10px;color:var(--ink)}
+  .info-box .info-desc{font-size:.88rem;color:var(--muted);line-height:1.6;margin-bottom:10px}
+  .info-box .info-formula{font-family:monospace;font-size:.8rem;background:#f0f4e8;padding:10px 13px;border-radius:9px;color:var(--brand);line-height:1.55;margin-bottom:14px;word-break:break-word}
+  .info-close{width:100%;background:var(--brand);color:#fff;border:none;padding:10px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600}
   @media print{
-    header .hbtns,.inputs-col .card:last-child,.sim-slider,.scen-card{display:none!important}
+    header .hbtns,.inputs-col .card:last-child,.sim-slider,.scen-card,.info-overlay{display:none!important}
     body{background:#fff} main{grid-template-columns:1fr}
     .card,.kpi{box-shadow:none;break-inside:avoid}
   }
@@ -140,46 +157,56 @@
         <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="predial" inputmode="decimal" placeholder="0"></div></div>
       <div class="field"><label>Adeudo de mantenimiento <span class="sign neg">(−)</span></label>
         <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="mantenimiento" inputmode="decimal" placeholder="0"></div></div>
+      <!-- Extras de cierre van en Adeudos (notaría, gestoría…) -->
+      <div class="field">
+        <label><input type="text" class="lbl-edit" id="lblE1" value="Notaría / Extra 1"> <span class="sign neg">(−)</span></label>
+        <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="extra1" inputmode="decimal" placeholder="0"></div></div>
+      <div class="field">
+        <label><input type="text" class="lbl-edit" id="lblE2" value="Gestoría / Extra 2"> <span class="sign neg">(−)</span></label>
+        <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="extra2" inputmode="decimal" placeholder="0"></div></div>
+      <div class="field">
+        <label><input type="text" class="lbl-edit" id="lblE3" value="Otros / Extra 3"> <span class="sign neg">(−)</span></label>
+        <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="extra3" inputmode="decimal" placeholder="0"></div></div>
+      <div class="hint">Los campos Extra son renombrables (notaría, gestoría, mudanza…). Se contabilizan como gastos de cierre y forman parte del capital necesario.</div>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:var(--amber)"></span>Inversión</h2>
       <div class="field"><label>Inversión de rehabilitación <span class="sign neg">(−)</span></label>
         <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="rehab" inputmode="decimal" placeholder="0"></div></div>
-      <div class="field">
-        <label><input type="text" class="lbl-edit" id="lblE1" value="Extra 1"> <span class="sign neg">(−)</span></label>
-        <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="extra1" inputmode="decimal" placeholder="0"></div></div>
-      <div class="field">
-        <label><input type="text" class="lbl-edit" id="lblE2" value="Extra 2"> <span class="sign neg">(−)</span></label>
-        <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="extra2" inputmode="decimal" placeholder="0"></div></div>
-      <div class="field">
-        <label><input type="text" class="lbl-edit" id="lblE3" value="Extra 3"> <span class="sign neg">(−)</span></label>
-        <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="extra3" inputmode="decimal" placeholder="0"></div></div>
-      <div class="hint">Puedes renombrar los campos "Extra" (notaría, gestoría, mudanza…).</div>
+      <div class="hint">Costo estimado de obra, reparaciones y acondicionamiento del inmueble.</div>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:var(--brand2)"></span>Cliente</h2>
       <div class="field">
-        <label>Dinero que el cliente ya invirtió en pagos <span class="sign neg">(−)</span></label>
+        <label>Dinero que el cliente ya invirtió en pagos</label>
         <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="clienteInv" inputmode="decimal" placeholder="0"></div>
-        <div class="hint">Se descuenta del monto máximo para obtener el punto de partida de la negociación.</div>
+        <div class="hint">Referencia informativa — no modifica el punto de partida de negociación.</div>
       </div>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:#8b5cf6"></span>Parámetros</h2>
-      <div class="param-row">
+      <div class="param-block">
         <label>Comisión por venta</label>
-        <input type="range" id="comPct" min="0" max="10" step="0.5" value="5">
-        <span class="param-val" id="comPctV">5.0%</span>
+        <div class="param-val-above" id="comPctV">5.0%</div>
+        <div class="slider-wrap">
+          <button class="btn-step" onclick="stepSlider('comPct',-0.5)">−</button>
+          <input type="range" id="comPct" min="0" max="10" step="0.5" value="5">
+          <button class="btn-step" onclick="stepSlider('comPct',0.5)">+</button>
+        </div>
       </div>
-      <div class="param-row">
+      <div class="param-block">
         <label>Factor de utilidad mínima</label>
-        <input type="range" id="utilFactor" min="0.5" max="3" step="0.25" value="1">
-        <span class="param-val" id="utilFactorV">1.00×</span>
+        <div class="param-val-above" id="utilFactorV">1.00×</div>
+        <div class="slider-wrap">
+          <button class="btn-step" onclick="stepSlider('utilFactor',-0.25)">−</button>
+          <input type="range" id="utilFactor" min="0.5" max="3" step="0.25" value="1">
+          <button class="btn-step" onclick="stepSlider('utilFactor',0.25)">+</button>
+        </div>
       </div>
-      <div class="hint">Utilidad mínima = (adeudos de servicios + rehabilitación + extras) × factor. Con 1× recuperas tu inversión operativa como ganancia.</div>
+      <div class="hint">Utilidad mínima = (servicios + rehabilitación + extras) × factor. Con 1× recuperas tu inversión operativa como ganancia.</div>
     </div>
   </div>
 
@@ -195,20 +222,52 @@
     </div>
 
     <div class="kpis">
-      <div class="kpi hero"><div class="t">Monto máximo al cliente</div><div class="v" id="kMax">$0</div><div class="s">Techo absoluto de tu oferta</div></div>
-      <div class="kpi hero"><div class="t">Punto de partida (negociación)</div><div class="v" id="kStart">$0</div><div class="s">Oferta inicial sugerida</div></div>
-      <div class="kpi hero2"><div class="t">Tu utilidad mínima</div><div class="v" id="kUtil">$0</div><div class="s" id="kUtilS">Garantizada al cerrar en el máximo</div></div>
-      <div class="kpi"><div class="t">Comisión por venta</div><div class="v" id="kCom">$0</div><div class="s" id="kComS">5% del valor</div></div>
-      <div class="kpi"><div class="t">Total adeudos</div><div class="v" id="kDeudas">$0</div><div class="s" id="kDeudasS">— del valor</div></div>
-      <div class="kpi"><div class="t">Capital que necesitas</div><div class="v" id="kCapital">$0</div><div class="s">Oferta + adeudos de servicios + inversión</div></div>
+      <div class="kpi hero">
+        <div class="t">Monto máximo al cliente <button class="info-btn" onclick="showInfo('montoMax')">i</button></div>
+        <div class="v" id="kMax">$0</div>
+        <div class="s">Techo absoluto de tu oferta</div>
+      </div>
+      <div class="kpi hero">
+        <div class="t">Punto de partida <button class="info-btn" onclick="showInfo('puntoPartida')">i</button></div>
+        <div class="v" id="kStart">$0</div>
+        <div class="s">Oferta inicial = monto máximo</div>
+      </div>
+      <div class="kpi hero2">
+        <div class="t">Tu utilidad mínima <button class="info-btn" onclick="showInfo('utilMin')">i</button></div>
+        <div class="v" id="kUtil">$0</div>
+        <div class="s" id="kUtilS">Garantizada al cerrar en el máximo</div>
+      </div>
+      <div class="kpi">
+        <div class="t">Comisión por venta <button class="info-btn" onclick="showInfo('comision')">i</button></div>
+        <div class="v" id="kCom">$0</div>
+        <div class="s" id="kComS">5% del valor</div>
+      </div>
+      <div class="kpi">
+        <div class="t">Total adeudos <button class="info-btn" onclick="showInfo('deudas')">i</button></div>
+        <div class="v" id="kDeudas">$0</div>
+        <div class="s" id="kDeudasS">— del valor</div>
+      </div>
+      <div class="kpi">
+        <div class="t">Capital que necesitas <button class="info-btn" onclick="showInfo('capital')">i</button></div>
+        <div class="v" id="kCapital">$0</div>
+        <div class="s">Enganche + gastos adicionales</div>
+      </div>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:var(--teal)"></span>Simulador de negociación</h2>
-      <p class="hint" style="margin-bottom:4px">Mueve el control: cada peso por debajo del monto máximo se convierte en utilidad extra para ti.</p>
+      <p class="hint" style="margin-bottom:8px">Mueve el control para ver tu utilidad en cada escenario de oferta. Arranca desde el máximo hacia abajo.</p>
       <div class="sim-slider">
-        <div class="range-ends"><span>Punto de partida<br><b id="reLow">$0</b></span><span style="text-align:right">Monto máximo<br><b id="reHigh">$0</b></span></div>
-        <input type="range" class="wide" id="oferta" min="0" max="100" step="1" value="0">
+        <div class="sim-val-display" id="ofertaValDisplay">Oferta: $0</div>
+        <div class="range-ends">
+          <span>$0<br><small>Sin oferta</small></span>
+          <span style="text-align:right">Punto de partida<br><b id="reHigh">$0</b></span>
+        </div>
+        <div class="slider-wrap" style="margin-bottom:4px">
+          <button class="btn-step" onclick="stepSlider('oferta',-5)">−</button>
+          <input type="range" class="wide" id="oferta" min="0" max="100" step="1" value="100">
+          <button class="btn-step" onclick="stepSlider('oferta',5)">+</button>
+        </div>
       </div>
       <div class="sim-grid">
         <div class="sim-cell"><div class="t">Oferta al cliente</div><div class="v" id="sOferta">$0</div></div>
@@ -219,7 +278,7 @@
     </div>
 
     <div class="charts">
-      <div class="card"><h2><span class="dot" style="background:var(--brand2)"></span>Cascada: ¿a dónde se va el valor?</h2>
+      <div class="card"><h2><span class="dot" style="background:var(--brand2)"></span>¿A dónde se va el valor?</h2>
         <div class="chart-box"><canvas id="waterfall"></canvas></div></div>
       <div class="card"><h2><span class="dot" style="background:#8b5cf6"></span>Distribución del valor del inmueble</h2>
         <div class="chart-box"><canvas id="dona"></canvas></div></div>
@@ -244,6 +303,16 @@
   </div>
 </main>
 
+<!-- ══ Popup de información ══ -->
+<div class="info-overlay" id="infoOverlay" onclick="if(event.target===this)closeInfo()">
+  <div class="info-box">
+    <h4 id="infoTitle"></h4>
+    <p class="info-desc" id="infoDesc"></p>
+    <div class="info-formula" id="infoFormula"></div>
+    <button class="info-close" onclick="closeInfo()">Entendido ✓</button>
+  </div>
+</div>
+
 <script>
 "use strict";
 /* ───────── utilidades ───────── */
@@ -266,31 +335,42 @@ function formatInput(el){
   const parts = raw.split('.');
   let intPart = parts[0].replace(/^0+(?=\d)/,'');
   const num = parseInt(intPart||'0',10);
-  let out = num.toLocaleString('es-MX');   // separador de miles: 1,234,567
+  let out = num.toLocaleString('es-MX');
   if(parts.length>1) out += '.' + parts.slice(1).join('').slice(0,2);
   el.value = out;
   const pos = Math.max(0, out.length - digitsRight);
   try{ el.setSelectionRange(pos,pos); }catch(e){}
 }
 
+/* ───────── slider con +/- ───────── */
+function stepSlider(id, delta){
+  const el = $(id);
+  let v = parseFloat(el.value) + delta;
+  v = Math.max(parseFloat(el.min), Math.min(parseFloat(el.max), v));
+  el.value = v;
+  render();
+}
+
 /* ───────── modelo ───────── */
-let ofertaPct = 0; // 0 = punto de partida, 100 = monto máximo
+let ofertaPct = 100; // 100 = punto de partida (monto máximo)
 
 function getState(){
   const g = id => parseMoney($(id));
   const valor=g('valor'), hipoteca=g('hipoteca'), agua=g('agua'), predial=g('predial'),
         mant=g('mantenimiento'), rehab=g('rehab'), e1=g('extra1'), e2=g('extra2'), e3=g('extra3'),
         clienteInv=g('clienteInv');
-  const comPct = parseFloat($('comPct').value)/100;
-  const factor = parseFloat($('utilFactor').value);
-  const inversion = agua+predial+mant+rehab+e1+e2+e3;   // adeudos de servicios + rehab + extras
+  const comPct   = parseFloat($('comPct').value)/100;
+  const factor   = parseFloat($('utilFactor').value);
+  const extras   = e1+e2+e3;                      // gastos de cierre → en Adeudos
+  const servicios= agua+predial+mant;              // adeudos de servicios
+  const inversion= servicios+rehab+extras;         // total operativo
   const comision = valor*comPct;
   const utilMin  = inversion*factor;
   const montoMax = valor - hipoteca - inversion - comision - utilMin;
-  const puntoPartida = montoMax - clienteInv;
-  return {valor,hipoteca,agua,predial,mant,rehab,e1,e2,e3,clienteInv,comPct,factor,
-          inversion,comision,utilMin,montoMax,puntoPartida,
-          adeudos:hipoteca+agua+predial+mant};
+  const puntoPartida = montoMax;                   // sin cascada: punto de partida = monto máximo
+  return {valor,hipoteca,agua,predial,mant,rehab,e1,e2,e3,extras,clienteInv,comPct,factor,
+          servicios,inversion,comision,utilMin,montoMax,puntoPartida,
+          adeudos: hipoteca+servicios+extras};
 }
 
 /* ───────── viabilidad ───────── */
@@ -306,10 +386,9 @@ function evaluar(s){
   }
   const margen = s.montoMax/s.valor;
   if(s.hipoteca > 0.7*s.valor) alerts.push('⚠️ La hipoteca supera el 70% del valor: la carga financiera es muy alta.');
-  if(s.inversion > 0.25*s.valor) alerts.push('⚠️ Adeudos de servicios + rehabilitación superan el 25% del valor.');
-  if(s.puntoPartida <= 0 && s.montoMax > 0) alerts.push('⚠️ Lo ya invertido por el cliente absorbe el punto de partida: la negociación inicia prácticamente en cero.');
+  if(s.inversion > 0.25*s.valor) alerts.push('⚠️ Adeudos de servicios + rehabilitación + extras superan el 25% del valor.');
   if(s.clienteInv > s.montoMax && s.montoMax>0) alerts.push('🔎 El cliente ya invirtió más que el monto máximo: espera una negociación difícil.');
-  if(s.inversion===0 && s.montoMax>0) alerts.push('🔎 Sin inversión registrada tu utilidad mínima es $0: captura rehabilitación y adeudos para proteger tu margen.');
+  if(s.inversion===0 && s.montoMax>0) alerts.push('🔎 Sin inversión registrada, tu utilidad mínima es $0. Captura rehabilitación y adeudos para proteger tu margen.');
 
   if(s.montoMax<=0){
     box.className='status red'; icon.textContent='⛔';
@@ -322,7 +401,7 @@ function evaluar(s){
   } else if(margen<0.25){
     box.className='status amber'; icon.textContent='🟡';
     title.textContent='Proyecto viable con precaución';
-    msg.textContent=`Oferta máxima de ${fmt(s.montoMax)} (${pct(s.montoMax,s.valor)} del valor). Viable, pero negocia desde ${fmt(Math.max(0,s.puntoPartida))} y cuida los imprevistos.`;
+    msg.textContent=`Oferta máxima de ${fmt(s.montoMax)} (${pct(s.montoMax,s.valor)} del valor). Viable, pero cuida los imprevistos.`;
   } else {
     box.className='status green'; icon.textContent='✅';
     title.textContent='Proyecto viable';
@@ -337,23 +416,21 @@ const hasChart = typeof Chart!=='undefined';
 
 function drawCharts(s){
   if(!hasChart) return;
-  const extras=s.e1+s.e2+s.e3;
-  // cascada
   const steps=[
-    {l:'Valor', v:s.valor, c:'#4e6b2f'},
-    {l:'Hipoteca', v:-s.hipoteca, c:'#ef4444'},
-    {l:'Adeudos serv.', v:-(s.agua+s.predial+s.mant), c:'#f97316'},
-    {l:'Rehabilitación', v:-s.rehab, c:'#f59e0b'},
-    {l:'Extras', v:-extras, c:'#eab308'},
-    {l:'Comisión', v:-s.comision, c:'#a855f7'},
-    {l:'Tu utilidad', v:-s.utilMin, c:'#059669'},
-    {l:'Al cliente', v:s.montoMax, c:'#0d9488'},
+    {l:'Valor',        v:s.valor,     c:'#4e6b2f'},
+    {l:'Hipoteca',     v:-s.hipoteca, c:'#ef4444'},
+    {l:'Adeudos serv.',v:-s.servicios,c:'#f97316'},
+    {l:'Extras cierre',v:-s.extras,   c:'#eab308'},
+    {l:'Rehabilitación',v:-s.rehab,   c:'#f59e0b'},
+    {l:'Comisión',     v:-s.comision, c:'#a855f7'},
+    {l:'Tu utilidad',  v:-s.utilMin,  c:'#059669'},
+    {l:'Al cliente',   v:s.montoMax,  c:'#0d9488'},
   ];
   let run=0; const data=[], colors=[];
   steps.forEach((st,i)=>{
     if(i===0){data.push([0,st.v]); run=st.v;}
     else if(i===steps.length-1){data.push([0,st.v]);}
-    else {data.push([run, run+st.v]); run+=st.v;}
+    else{data.push([run, run+st.v]); run+=st.v;}
     colors.push(st.c);
   });
   const labels=steps.map(st=>st.l);
@@ -366,10 +443,9 @@ function drawCharts(s){
         scales:{y:{ticks:{callback:v=>'$'+(v/1000).toLocaleString('es-MX')+'k'},grid:{color:'#eef2f7'}},
                 x:{grid:{display:false},ticks:{font:{size:10}}}}}});
   }
-  // dona
-  const dLabels=['Hipoteca','Adeudos servicios','Rehabilitación','Extras','Comisión','Tu utilidad mín.','Monto al cliente'];
-  const dData=[s.hipoteca, s.agua+s.predial+s.mant, s.rehab, extras, s.comision, s.utilMin, Math.max(0,s.montoMax)];
-  const dColors=['#ef4444','#f97316','#f59e0b','#eab308','#a855f7','#059669','#0d9488'];
+  const dLabels=['Hipoteca','Adeudos servicios','Extras cierre','Rehabilitación','Comisión','Tu utilidad mín.','Monto al cliente'];
+  const dData=[s.hipoteca, s.servicios, s.extras, s.rehab, s.comision, s.utilMin, Math.max(0,s.montoMax)];
+  const dColors=['#ef4444','#f97316','#eab308','#f59e0b','#a855f7','#059669','#0d9488'];
   if(donaChart){donaChart.data.datasets[0].data=dData; donaChart.update('none');}
   else{
     donaChart=new Chart($('dona'),{type:'doughnut',
@@ -388,64 +464,109 @@ function drawTable(s){
     ['Adeudo de agua', -s.agua],
     ['Adeudo predial', -s.predial],
     ['Adeudo de mantenimiento', -s.mant],
+    [$('lblE1').value||'Notaría / Extra 1', -s.e1],
+    [$('lblE2').value||'Gestoría / Extra 2', -s.e2],
+    [$('lblE3').value||'Otros / Extra 3', -s.e3],
     ['Inversión de rehabilitación', -s.rehab],
-    [$('lblE1').value||'Extra 1', -s.e1],
-    [$('lblE2').value||'Extra 2', -s.e2],
-    [$('lblE3').value||'Extra 3', -s.e3],
     [`Comisión por venta (${(s.comPct*100).toFixed(1)}%)`, -s.comision],
     [`Utilidad mínima para ti (×${s.factor})`, -s.utilMin],
   ];
   const tb=$('tabla').querySelector('tbody'); tb.innerHTML='';
   rows.forEach(([c,v,cls])=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${c}</td><td class="${cls|| (v<0?'neg':'')}">${fmtS(v)}</td><td>${pct(Math.abs(v),s.valor)}</td>`;
+    tr.innerHTML=`<td>${c}</td><td class="${cls||(v<0?'neg':'')}">${fmtS(v)}</td><td>${pct(Math.abs(v),s.valor)}</td>`;
     tb.appendChild(tr);
   });
   const t1=document.createElement('tr'); t1.className='total';
-  t1.innerHTML=`<td>Monto máximo al cliente</td><td class="${s.montoMax<0?'neg':''}">${fmtS(s.montoMax)}</td><td>${pct(s.montoMax,s.valor)}</td>`;
+  t1.innerHTML=`<td>Monto máximo = Punto de partida</td><td class="${s.montoMax<0?'neg':''}">${fmtS(s.montoMax)}</td><td>${pct(s.montoMax,s.valor)}</td>`;
   tb.appendChild(t1);
-  const t2=document.createElement('tr');
-  t2.innerHTML=`<td>(−) Ya invertido por el cliente</td><td class="neg">${fmtS(-s.clienteInv)}</td><td>${pct(s.clienteInv,s.valor)}</td>`;
-  tb.appendChild(t2);
-  const t3=document.createElement('tr'); t3.className='total';
-  t3.innerHTML=`<td>Punto de partida de negociación</td><td class="${s.puntoPartida<0?'neg':''}">${fmtS(s.puntoPartida)}</td><td>${pct(s.puntoPartida,s.valor)}</td>`;
-  tb.appendChild(t3);
+  if(s.clienteInv>0){
+    const tInfo=document.createElement('tr');
+    tInfo.innerHTML=`<td class="info-row">ℹ️ Ya invertido por el cliente (informativo)</td><td class="info-row neg">${fmtS(-s.clienteInv)}</td><td class="info-row">${pct(s.clienteInv,s.valor)}</td>`;
+    tb.appendChild(tInfo);
+  }
 }
 
 /* ───────── simulador ───────── */
 function drawSim(s){
-  const low=Math.max(0,s.puntoPartida), high=Math.max(0,s.montoMax);
-  $('reLow').textContent=fmt(low); $('reHigh').textContent=fmt(high);
-  const oferta = high>low ? low + (high-low)*ofertaPct/100 : high;
+  const high = Math.max(0, s.montoMax);
+  $('reHigh').textContent = fmt(high);
+  const oferta    = high * ofertaPct / 100;
   const utilTotal = s.utilMin + (s.montoMax - oferta);
-  const capital = oferta + s.inversion;   // lo que desembolsas (la hipoteca se liquida en la venta, no la pagas tú)
-  $('sOferta').textContent=fmt(oferta);
-  $('sUtil').textContent=fmtS(utilTotal);
-  $('sUtil').style.color = utilTotal>=0 ? 'var(--green)' : 'var(--red)';
-  $('sRoi').textContent = capital>0 ? pct(utilTotal,capital) : '—';
-  $('sMargen').textContent = pct(utilTotal,s.valor);
-  $('kCapital').textContent=fmt(capital);
+  // Capital = enganche (oferta al cliente) + gastos adicionales de cierre (extras)
+  // La hipoteca NO se incluye: se liquida con el producto de la venta
+  const capital   = oferta + s.extras;
+  $('ofertaValDisplay').textContent = `Oferta: ${fmt(oferta)}`;
+  $('sOferta').textContent  = fmt(oferta);
+  $('sUtil').textContent    = fmtS(utilTotal);
+  $('sUtil').style.color    = utilTotal>=0 ? 'var(--green)' : 'var(--red)';
+  $('sRoi').textContent     = capital>0 ? pct(utilTotal,capital) : '—';
+  $('sMargen').textContent  = pct(utilTotal,s.valor);
+  $('kCapital').textContent = fmt(capital);
 }
 
 /* ───────── render principal ───────── */
 function render(){
   const s=getState();
-  $('comPctV').textContent=(s.comPct*100).toFixed(1)+'%';
-  $('utilFactorV').textContent=s.factor.toFixed(2)+'×';
-  $('kMax').textContent=fmtS(s.montoMax);
+  $('comPctV').textContent    = (s.comPct*100).toFixed(1)+'%';
+  $('utilFactorV').textContent= s.factor.toFixed(2)+'×';
+  $('kMax').textContent = fmtS(s.montoMax);
   $('kMax').classList.toggle('neg-val', s.montoMax<0);
-  $('kStart').textContent=fmtS(s.puntoPartida);
+  $('kStart').textContent = fmtS(s.puntoPartida);
   $('kStart').classList.toggle('neg-val', s.puntoPartida<0);
-  $('kUtil').textContent=fmt(s.utilMin);
-  $('kCom').textContent=fmt(s.comision);
-  $('kComS').textContent=(s.comPct*100).toFixed(1)+'% del valor';
-  $('kDeudas').textContent=fmt(s.adeudos);
-  $('kDeudasS').textContent=pct(s.adeudos,s.valor)+' del valor';
+  $('kUtil').textContent  = fmt(s.utilMin);
+  $('kCom').textContent   = fmt(s.comision);
+  $('kComS').textContent  = (s.comPct*100).toFixed(1)+'% del valor';
+  $('kDeudas').textContent   = fmt(s.adeudos);
+  $('kDeudasS').textContent  = pct(s.adeudos,s.valor)+' del valor';
   try{ evaluar(s); }catch(e){}
   try{ drawSim(s); }catch(e){}
   try{ drawTable(s); }catch(e){}
   try{ drawCharts(s); }catch(e){}
 }
+
+/* ───────── popup de info ───────── */
+const INFO_DATA = {
+  montoMax: {
+    title: 'Monto máximo al cliente',
+    desc: 'El techo absoluto que puedes pagarle al vendedor y aún salir ganando. Si ofreces más, el proyecto deja de ser rentable.',
+    formula: 'Valor − Hipoteca − Servicios − Extras − Rehabilitación − Comisión − Utilidad mínima'
+  },
+  puntoPartida: {
+    title: 'Punto de partida (negociación)',
+    desc: 'Es igual al monto máximo — sin cascada. Arrancas con tu mejor oferta posible. Cada peso que logres bajar en la negociación se convierte en utilidad adicional para ti.',
+    formula: '= Monto máximo al cliente (directo, sin deducción adicional)'
+  },
+  utilMin: {
+    title: 'Tu utilidad mínima',
+    desc: 'La ganancia mínima garantizada si cierras exactamente al monto máximo. El factor multiplica tu inversión operativa total (servicios + rehab + extras) para darte un colchón.',
+    formula: '(Servicios + Rehabilitación + Extras) × Factor de utilidad'
+  },
+  comision: {
+    title: 'Comisión por venta',
+    desc: 'Lo que pagarás al agente o por gestión cuando vendas el inmueble. Se calcula sobre el valor comercial total.',
+    formula: 'Valor comercial × % de comisión configurado'
+  },
+  deudas: {
+    title: 'Total adeudos',
+    desc: 'Suma de todos los adeudos y gastos de cierre: hipoteca, servicios (agua, predial, mantenimiento) y los extras (notaría, gestoría, etc.).',
+    formula: 'Hipoteca + Agua + Predial + Mantenimiento + Extras (E1+E2+E3)'
+  },
+  capital: {
+    title: 'Capital que necesitas',
+    desc: 'El efectivo que debes tener disponible para cerrar: el pago al cliente (enganche) más tus gastos adicionales de cierre. La hipoteca no entra — se liquida con el producto de la venta posterior.',
+    formula: 'Oferta al cliente + Extras (notaría, gestoría, otros)'
+  }
+};
+function showInfo(key){
+  const d = INFO_DATA[key]; if(!d) return;
+  $('infoTitle').textContent   = d.title;
+  $('infoDesc').textContent    = d.desc;
+  $('infoFormula').textContent = d.formula;
+  $('infoOverlay').classList.add('open');
+}
+function closeInfo(){ $('infoOverlay').classList.remove('open'); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeInfo(); });
 
 /* ───────── escenarios (localStorage) ───────── */
 const LS_KEY='calcInmobEscenarios';
@@ -458,7 +579,9 @@ function collect(){
 function apply(o){
   const vals=o.vals||{}, labels=o.labels||{};
   MONEY_IDS.forEach(id=>{$(id).value=vals[id]||'';});
-  $('lblE1').value=labels.e1||'Extra 1'; $('lblE2').value=labels.e2||'Extra 2'; $('lblE3').value=labels.e3||'Extra 3';
+  $('lblE1').value=labels.e1||'Notaría / Extra 1';
+  $('lblE2').value=labels.e2||'Gestoría / Extra 2';
+  $('lblE3').value=labels.e3||'Otros / Extra 3';
   $('comPct').value=o.comPct||5; $('utilFactor').value=o.utilFactor||1;
   render();
 }
@@ -487,7 +610,7 @@ function listScens(){
 function resetAll(){
   if(!confirm('¿Limpiar todos los campos?'))return;
   MONEY_IDS.forEach(id=>$(id).value='');
-  $('comPct').value=5; $('utilFactor').value=1; $('oferta').value=0; ofertaPct=0;
+  $('comPct').value=5; $('utilFactor').value=1; $('oferta').value=100; ofertaPct=100;
   render();
 }
 
@@ -496,7 +619,6 @@ MONEY_IDS.forEach(id=>{
   $(id).addEventListener('input',e=>{formatInput(e.target);render();});
 });
 ['lblE1','lblE2','lblE3'].forEach(id=>$(id).addEventListener('input',render));
-// 'input' + 'change' + 'touchend': compatibilidad con navegadores/visores móviles
 ['input','change','touchend'].forEach(ev=>{
   $('comPct').addEventListener(ev,render);
   $('utilFactor').addEventListener(ev,render);
