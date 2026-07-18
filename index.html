@@ -38,7 +38,7 @@
   .money-wrap .cur{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
   input[type=text].money{width:100%;padding:9px 12px 9px 26px;border:1.5px solid var(--line);border-radius:9px;font-size:.98rem;font-variant-numeric:tabular-nums;transition:border .15s;background:#fbfdff;color:var(--ink)}
   input[type=text].money:focus{outline:none;border-color:var(--brand2);background:#fff}
-  input[type=text].lbl-edit{border:none;border-bottom:1px dashed var(--line);font-size:.8rem;font-weight:600;color:var(--muted);background:transparent;width:60%;padding:1px 2px}
+  input[type=text].lbl-edit{border:none;border-bottom:1.5px dashed var(--brand2);font-size:.8rem;font-weight:600;color:var(--muted);background:transparent;width:60%;padding:1px 2px;cursor:text;-webkit-user-select:text;user-select:text}
   input[type=text].lbl-edit:focus{outline:none;border-bottom-color:var(--brand2);color:var(--ink)}
   /* Slider con +/- */
   .param-block{margin-bottom:16px}
@@ -167,7 +167,7 @@
       <div class="field">
         <label><input type="text" class="lbl-edit" id="lblE3" value="Otros / Extra 3"> <span class="sign neg">(−)</span></label>
         <div class="money-wrap"><span class="cur">$</span><input type="text" class="money" id="extra3" inputmode="decimal" placeholder="0"></div></div>
-      <div class="hint">Los campos Extra son renombrables (notaría, gestoría, mudanza…). Se contabilizan como gastos de cierre y forman parte del capital necesario.</div>
+      <div class="hint">✏️ Toca el nombre punteado de un campo Extra para renombrarlo (notaría, gestoría, mudanza…). Se contabilizan como gastos de cierre y forman parte del capital necesario.</div>
     </div>
 
     <div class="card">
@@ -256,7 +256,7 @@
 
     <div class="card">
       <h2><span class="dot" style="background:var(--teal)"></span>Simulador de negociación</h2>
-      <p class="hint" style="margin-bottom:8px">Mueve el control para ver tu utilidad en cada escenario de oferta. Arranca desde el máximo hacia abajo.</p>
+      <p class="hint" style="margin-bottom:8px">Mueve el control o escribe el monto exacto en "Oferta al cliente". Arranca desde el máximo hacia abajo: cada peso que bajes es utilidad extra.</p>
       <div class="sim-slider">
         <div class="sim-val-display" id="ofertaValDisplay">Oferta: $0</div>
         <div class="range-ends">
@@ -278,18 +278,15 @@
               style="font-size:1.05rem;font-weight:800;color:var(--ink)">
           </div>
         </div>
-        <div class="sim-cell"><div class="t">Utilidad total tuya</div><div class="v" id="sUtil" style="color:var(--green)">$0</div></div>
+        <div class="sim-cell"><div class="t">Utilidad total tuya (sin comisión)</div><div class="v" id="sUtil" style="color:var(--green)">$0</div></div>
+        <div class="sim-cell"><div class="t">Utilidad + comisión por venta</div><div class="v" id="sUtilCom" style="color:var(--green)">$0</div></div>
         <div class="sim-cell"><div class="t">ROI sobre capital</div><div class="v" id="sRoi">0%</div></div>
         <div class="sim-cell"><div class="t">Margen sobre valor</div><div class="v" id="sMargen">0%</div></div>
       </div>
     </div>
 
-    <div class="charts">
-      <div class="card"><h2><span class="dot" style="background:var(--brand2)"></span>¿A dónde se va el valor?</h2>
-        <div class="chart-box"><canvas id="waterfall"></canvas></div></div>
-      <div class="card"><h2><span class="dot" style="background:#8b5cf6"></span>Distribución del valor del inmueble</h2>
-        <div class="chart-box"><canvas id="dona"></canvas></div></div>
-    </div>
+    <div class="card"><h2><span class="dot" style="background:#8b5cf6"></span>Distribución del valor del inmueble</h2>
+      <div class="chart-box"><canvas id="dona"></canvas></div></div>
 
     <div class="card">
       <h2><span class="dot" style="background:var(--ink)"></span>Desglose del cálculo</h2>
@@ -419,38 +416,11 @@ function evaluar(s){
 }
 
 /* ───────── gráficas ───────── */
-let wfChart=null, donaChart=null;
+let donaChart=null;
 const hasChart = typeof Chart!=='undefined';
 
 function drawCharts(s){
   if(!hasChart) return;
-  const steps=[
-    {l:'Valor',        v:s.valor,     c:'#4e6b2f'},
-    {l:'Hipoteca',     v:-s.hipoteca, c:'#ef4444'},
-    {l:'Adeudos serv.',v:-s.servicios,c:'#f97316'},
-    {l:'Extras cierre',v:-s.extras,   c:'#eab308'},
-    {l:'Rehabilitación',v:-s.rehab,   c:'#f59e0b'},
-    {l:'Comisión',     v:-s.comision, c:'#a855f7'},
-    {l:'Tu utilidad',  v:-s.utilMin,  c:'#059669'},
-    {l:'Al cliente',   v:s.montoMax,  c:'#0d9488'},
-  ];
-  let run=0; const data=[], colors=[];
-  steps.forEach((st,i)=>{
-    if(i===0){data.push([0,st.v]); run=st.v;}
-    else if(i===steps.length-1){data.push([0,st.v]);}
-    else{data.push([run, run+st.v]); run+=st.v;}
-    colors.push(st.c);
-  });
-  const labels=steps.map(st=>st.l);
-  if(wfChart){wfChart.data.labels=labels; wfChart.data.datasets[0].data=data; wfChart.data.datasets[0].backgroundColor=colors; wfChart.update('none');}
-  else{
-    wfChart=new Chart($('waterfall'),{type:'bar',
-      data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:5,borderSkipped:false}]},
-      options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtS(c.raw[1]-c.raw[0])}}},
-        scales:{y:{ticks:{callback:v=>'$'+(v/1000).toLocaleString('es-MX')+'k'},grid:{color:'#eef2f7'}},
-                x:{grid:{display:false},ticks:{font:{size:10}}}}}});
-  }
   const dLabels=['Hipoteca','Adeudos servicios','Extras cierre','Rehabilitación','Comisión','Tu utilidad mín.','Monto al cliente'];
   const dData=[s.hipoteca, s.servicios, s.extras, s.rehab, s.comision, s.utilMin, Math.max(0,s.montoMax)];
   const dColors=['#ef4444','#f97316','#eab308','#f59e0b','#a855f7','#059669','#0d9488'];
@@ -511,6 +481,9 @@ function drawSim(s){
   }
   $('sUtil').textContent    = fmtS(utilTotal);
   $('sUtil').style.color    = utilTotal>=0 ? 'var(--green)' : 'var(--red)';
+  const utilCom = utilTotal + s.comision;   // utilidad + la comisión por venta (si tú la cobras)
+  $('sUtilCom').textContent = fmtS(utilCom);
+  $('sUtilCom').style.color = utilCom>=0 ? 'var(--green)' : 'var(--red)';
   $('sRoi').textContent     = capital>0 ? pct(utilTotal,capital) : '—';
   $('sMargen').textContent  = pct(utilTotal,s.valor);
   $('kCapital').textContent = fmt(capital);
