@@ -130,6 +130,8 @@
   .scen-list li span{flex:1}
   .scen-list button{padding:4px 10px;font-size:.75rem}
   .empty{font-size:.8rem;color:var(--muted);font-style:italic}
+  .ver-badge{text-align:center;font-size:.72rem;color:var(--muted);padding:18px 0 4px;letter-spacing:.3px}
+  .ver-badge b{color:var(--brand);font-weight:700}
   /* Popup info */
   .info-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
   .info-overlay.open{display:flex}
@@ -328,6 +330,7 @@
     </div>
   </div>
 </main>
+<div class="ver-badge">Casa Viva · Calculadora Inmobiliaria <b id="verTag">v—</b></div>
 
 <!-- ══ Popup de información ══ -->
 <div class="info-overlay" id="infoOverlay" onclick="if(event.target===this)closeInfo()">
@@ -343,6 +346,7 @@
 "use strict";
 const APP_VERSION='1.3.0';  // ver changelog al inicio del archivo
 try{console.log('%cCasa Viva · Calculadora Inmobiliaria v'+APP_VERSION,'color:#4e6b2f;font-weight:700;font-size:13px');}catch(e){}
+try{document.getElementById('verTag').textContent='v'+APP_VERSION;}catch(e){}
 
 /* ───────── utilidades ───────── */
 const $ = id => document.getElementById(id);
